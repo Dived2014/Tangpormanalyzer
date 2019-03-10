@@ -7,6 +7,116 @@
     <groupId>com.Dived2014</groupId>
     <artifactId>analyze</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
+    <name>analyze</name>
+    <description>
+        in order to analyze poems.
+    </description>
+    <developers>
+        <developer>
+            <id>01</id>
+            <name>Dived2014</name>
+            <email></email>
+            <roles>
+                <role>Creator</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <properties>
+        <encoding>UTF-8</encoding>
+        <java.version>1.8</java.version>
+        <maven.complier.source>${java.version}</maven.complier.source>
+        <maven.complier.target>${java.version}</maven.complier.target>
+    </properties>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ansj</groupId>
+            <artifactId>ansj_seg</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.34.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <!--编译时自动生成->
+        <!-1\idea安装lombok插件2、在设置中启用注解处理器 ->
+        <!-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.22</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <mainClass></mainClass>
+
+                    </archive>
+                </configuration>
+            </plugin>
+            <!--->
+            <!-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <archive>
+                        <mainfest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>fix</classpathPrefix>
+                            <mainClass>com.Dived2014.tanganalyze.Application</mainClass>
+                        </mainfest>
+                    </archive>
+                    <execution>
+                        <id>copy-dependency</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
