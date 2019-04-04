@@ -8,7 +8,7 @@ package com.Dived2014.tanganalyze.crawler.Parse;/*
  */
 
 import com.Dived2014.tanganalyze.crawler.Common.Page;
-import com.Dived2014.tanganalyze.crawler.Common.PoetryInfo;
+
 import com.gargoylesoftware.htmlunit.html.*;
 
 public class DetailsPagePrase implements Parse {
@@ -24,7 +24,7 @@ public class DetailsPagePrase implements Parse {
             return;
         }
 
-        
+
         /**
          * /html/body/div[3]/div[1]/div[1]/div[1]/h1
          * body > div.main3 > div.left > div:nth-child(1) > div.cont > h1
@@ -56,6 +56,7 @@ public class DetailsPagePrase implements Parse {
         page.getDataSet().putData("dynast",dynast);
         page.getDataSet().putData("title",title);
         page.getDataSet().putData("content",content);
+
 
     }
 }
