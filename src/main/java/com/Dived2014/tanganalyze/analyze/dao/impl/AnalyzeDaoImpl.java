@@ -10,6 +10,8 @@ package com.Dived2014.tanganalyze.analyze.dao.impl;/*
 import com.Dived2014.tanganalyze.analyze.dao.AnalyzeDao;
 import com.Dived2014.tanganalyze.analyze.entity.PoetryInfo;
 import com.Dived2014.tanganalyze.analyze.entity.model.AuthorCount;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,6 +24,7 @@ import java.util.List;
 public class AnalyzeDaoImpl implements AnalyzeDao {
 
     private final DataSource dataSource;
+    private final Logger logger = LoggerFactory.getLogger(AnalyzeDaoImpl.class);
 
     public AnalyzeDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -53,7 +56,7 @@ public class AnalyzeDaoImpl implements AnalyzeDao {
         String sql = "select title,dynasty,author,content from poetry_info";
         List<PoetryInfo> list = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
@@ -67,7 +70,7 @@ public class AnalyzeDaoImpl implements AnalyzeDao {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("SQL exception .{}",e.getMessage());
         }
         return list;
     }

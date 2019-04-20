@@ -8,6 +8,7 @@ package com.Dived2014.tanganalyze.analyze.service;/*
  */
 
 import com.Dived2014.tanganalyze.analyze.entity.model.AuthorCount;
+import com.Dived2014.tanganalyze.analyze.entity.model.SingleWord;
 import com.Dived2014.tanganalyze.analyze.entity.model.WordCount;
 
 import java.util.List;
@@ -15,4 +16,5 @@ import java.util.List;
 public interface AnalyzeService {
     List<AuthorCount> analyzeAuthorCount();
     List<WordCount> analyzeWordClout();
+    List<SingleWord> analyzeSingleWord();
 }

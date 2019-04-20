@@ -119,6 +119,67 @@ function cloudWorld(id) {
     });
 }
 
-function highfreqentcheck(id){
+function singleword(id){
+    $.get({
+        url: "/analyze/single_word",
+        dataType: "json",
+        method: "get",
+        success: function (data, status, xhr) {
+            var myChart = echarts.init(document.getElementById(id));
+            var options = {
 
+                series: [{
+                    type: 'wordCloud',
+                    shape: 'pentagon',
+                    left: 'center',
+                    top: 'center',
+                    width: '80%',
+                    height: '80%',
+                    right: null,
+                    bottom: null,
+                    sizeRange: [12, 60],
+                    rotationRange: [-90, 90],
+                    rotationStep: 45,
+                    gridSize: 8,
+                    drawOutOfBound: false,
+                    textStyle: {
+                        normal: {
+                            fontFamily: 'sans-serif',
+                            fontWeight: 'bold',
+                            color: function () {
+                                //rgb(r,g,b)
+                                return 'rgb(' + [
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160)
+                                ].join(',') + ')';
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    // Data is an array. Each array item must have name and value property.
+                    data: []
+                }]
+            };
+            for (var i=0 ;i<data.length; i++) {
+                var singleWord = data[i];
+                //wordCount => 词 ： 词频
+                options.series[0].data.push({
+                    name: singleWord.word,
+                    value: singleWord.count,
+                    textStyle: {
+                        normal: {},
+                        emphasis: {}
+                    }
+                });
+            }
+            myChart.setOption(options, true);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
 }

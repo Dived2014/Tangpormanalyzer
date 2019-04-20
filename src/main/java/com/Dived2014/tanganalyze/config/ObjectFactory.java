@@ -20,6 +20,8 @@ import com.Dived2014.tanganalyze.crawler.Pipeline.DatabasePipeline;
 import com.Dived2014.tanganalyze.web.WebController;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.gargoylesoftware.htmlunit.WebClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
@@ -31,6 +33,8 @@ public final class ObjectFactory {
     private static final ObjectFactory instace = new ObjectFactory();
 
     private final Map<Class, Object> objectHashMap = new HashMap<>();
+
+    private final Logger logger = LoggerFactory.getLogger(ObjectFactory.class);
 
     private ObjectFactory() {
         InitConfigProperties();
@@ -83,6 +87,7 @@ public final class ObjectFactory {
     private void InitConfigProperties() {
         ConfigProperties configProperties = new ConfigProperties();
         objectHashMap.put(ConfigProperties.class, configProperties);
+        logger.info("-----configproperties info-----\n{}",configProperties.toString());
     }
 
     public <T> T getObject(Class classz) {
@@ -97,10 +102,12 @@ public final class ObjectFactory {
     }
 
     private void printObjectList() {
+        logger.info("-------ObjectFactory List-------\n");
         for (Map.Entry<Class, Object> entry : objectHashMap.entrySet()) {
-            System.out.println(String.format("[%s] \t ==> [%s]",
+            logger.info(String.format("[%s] \t ==> [%s]",
                     entry.getKey().getCanonicalName(),
                     entry.getValue().getClass().getCanonicalName()));
         }
+        logger.info("--------------------------------\n");
     }
 }

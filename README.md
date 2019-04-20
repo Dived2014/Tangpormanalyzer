@@ -14,12 +14,11 @@
 - 多线程
 - 数据库和JDBC编程
 # 项目实现
-![唐诗分析器的整体框架](https://img-blog.csdnimg.cn/20190415143145384.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0RpdmVkMjAxNA==,size_16,color_FFFFFF,t_70)    
-    
+![唐诗分析器的整体框架](details.png)        
 # 项目效果
-![](src\main\resources\output.png)
+![](output.png)
 ---
-![](src\main\resources\output2.png)
+![](output2.png)
     
 # 项目扩展
 

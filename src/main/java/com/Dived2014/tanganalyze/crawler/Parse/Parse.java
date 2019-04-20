@@ -11,5 +11,5 @@ import com.Dived2014.tanganalyze.crawler.Common.Page;
 
 public interface Parse {
 
-    void parse(Page page);
+    void parse(final Page page);
 }

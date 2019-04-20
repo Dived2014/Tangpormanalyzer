@@ -11,5 +11,5 @@ import com.Dived2014.tanganalyze.crawler.Common.DataSet;
 import com.Dived2014.tanganalyze.crawler.Common.Page;
 
 public interface Pipeline {
-    void pipeline(Page page);
+    void pipeline(final Page page);
 }

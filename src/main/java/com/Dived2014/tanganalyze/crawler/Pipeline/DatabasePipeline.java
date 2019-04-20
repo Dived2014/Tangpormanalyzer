@@ -9,6 +9,8 @@ package com.Dived2014.tanganalyze.crawler.Pipeline;/*
 //
 
 import com.Dived2014.tanganalyze.crawler.Common.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.sql.DataSource;
@@ -22,9 +24,10 @@ public class DatabasePipeline implements Pipeline{
         this.dateSource = dateSource;
     }
 
+    private final Logger logger = LoggerFactory.getLogger(DatabasePipeline.class);
 
     @Override
-    public void pipeline(Page page) {
+    public void pipeline(final Page page) {
 
         String dynasty = (String) page.getDataSet().getData("dynast");
         String content = (String) page.getDataSet().getData("content");
@@ -45,7 +48,7 @@ public class DatabasePipeline implements Pipeline{
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("SQL exception {}.",e.getMessage());
         }
     }
 }

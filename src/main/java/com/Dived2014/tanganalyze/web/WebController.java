@@ -8,8 +8,11 @@ package com.Dived2014.tanganalyze.web;/*
  */
 
 import com.Dived2014.tanganalyze.analyze.entity.model.AuthorCount;
+import com.Dived2014.tanganalyze.analyze.entity.model.SingleWord;
 import com.Dived2014.tanganalyze.analyze.entity.model.WordCount;
 import com.Dived2014.tanganalyze.analyze.service.AnalyzeService;
+import com.Dived2014.tanganalyze.config.ObjectFactory;
+import com.Dived2014.tanganalyze.crawler.Crawler;
 import com.google.gson.Gson;
 import spark.ResponseTransformer;
 import spark.Spark;
@@ -24,22 +27,36 @@ public class WebController {
         this.analyzeService = analyzeService;
     }
 
-    public List<AuthorCount> analyzeAuthorCount() {
+    private List<AuthorCount> analyzeAuthorCount() {
         return analyzeService.analyzeAuthorCount();
     }
 
-    public List<WordCount> analyzeWordCount() {
+    private List<WordCount> analyzeWordCount() {
         return analyzeService.analyzeWordClout();
     }
 
+    private List<SingleWord> analyzeSingleWord(){
+        return analyzeService.analyzeSingleWord();
+    }
     public void launch() {
         ResponseTransformer transformer = new JSONTransformer();
+
+        Spark.staticFileLocation("/static");
+
         Spark.get("/analyze/author_count",
                 ((request, response) -> analyzeAuthorCount()),
                 transformer);
         Spark.get("/analyze/word_cloud",
                 ((request, response) -> analyzeWordCount()),
                 transformer);
+        Spark.get("/analyze/single_word",
+                ((request, response) -> analyzeSingleWord()),
+                transformer);
+        Spark.get("/crawler/stop",((request, response) -> {
+            Crawler c =  ObjectFactory.getInstace().getObject(Crawler.class);
+            c.stop();
+            return "Stop crawler";
+        }));
     }
 
     public static class JSONTransformer implements ResponseTransformer {

@@ -16,6 +16,8 @@ import com.Dived2014.tanganalyze.crawler.Pipeline.Pipeline;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -36,13 +38,16 @@ public class Crawler {
     private final List<Pipeline> pipelineList = new LinkedList<>();
 
     private final ExecutorService executorService;
+    private final Logger logger = LoggerFactory.getLogger(Crawler.class);
 
     public Crawler() {
+
         this.webClient = new WebClient(BrowserVersion.CHROME);
         this.webClient.getOptions().setJavaScriptEnabled(false);
         this.webClient.getOptions().setCssEnabled(false);
 
-        this.executorService = Executors.newFixedThreadPool(16, new ThreadFactory() {
+        this.executorService = Executors.newFixedThreadPool(
+                32, new ThreadFactory() {
             private final AtomicInteger id = new AtomicInteger(0);
 
             @Override
@@ -59,8 +64,8 @@ public class Crawler {
     }
 
     public void start() {
-        this.executorService.submit(() -> parse());
-        this.executorService.submit(() -> pipeline());
+        this.executorService.submit(this::parse);
+        this.executorService.submit(this::pipeline);
     }
 
     private void parse() {
@@ -68,7 +73,7 @@ public class Crawler {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("Parse exception {} .",e.getMessage());
             }
             final Page page = this.docQueue.poll();
             if (page == null) {
@@ -96,7 +101,7 @@ public class Crawler {
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Parse tasks exception {} .",e.getMessage());
                 }
             });
 
@@ -116,7 +121,7 @@ public class Crawler {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error("pipeline exception {} .",e.getMessage());
                     }
 
                     for (Pipeline pipeline : Crawler.this.pipelineList) {
@@ -138,6 +143,7 @@ public class Crawler {
     public void stop() {
         if (this.executorService != null && !this.executorService.isShutdown()) {
             this.executorService.shutdown();
+            logger.info("Crawler stopped ...");
         }
     }
 

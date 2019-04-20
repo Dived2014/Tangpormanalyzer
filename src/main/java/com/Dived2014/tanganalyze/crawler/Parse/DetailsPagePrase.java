@@ -19,12 +19,10 @@ public class DetailsPagePrase implements Parse {
     private String contentXpath = "//div[@class='cont']/[@class='contson']";
 
     @Override
-    public void parse(Page page) {
+    public void parse(final Page page) {
         if (!page.isDetail()) {
             return;
         }
-
-
         /**
          * /html/body/div[3]/div[1]/div[1]/div[1]/h1
          * body > div.main3 > div.left > div:nth-child(1) > div.cont > h1
