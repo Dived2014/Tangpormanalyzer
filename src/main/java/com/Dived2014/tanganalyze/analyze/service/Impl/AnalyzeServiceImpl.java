@@ -10,6 +10,7 @@ package com.Dived2014.tanganalyze.analyze.service.Impl;/*
 import com.Dived2014.tanganalyze.analyze.dao.AnalyzeDao;
 import com.Dived2014.tanganalyze.analyze.entity.PoetryInfo;
 import com.Dived2014.tanganalyze.analyze.entity.model.AuthorCount;
+import com.Dived2014.tanganalyze.analyze.entity.model.SingleWord;
 import com.Dived2014.tanganalyze.analyze.entity.model.WordCount;
 import com.Dived2014.tanganalyze.analyze.service.AnalyzeService;
 import org.ansj.domain.Result;
@@ -30,7 +31,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
     @Override
     public List<AuthorCount> analyzeAuthorCount() {
         List<AuthorCount> list = analyzeDao.analyzeAuthorCount();
-        Collections.sort(list, Comparator.comparingInt(AuthorCount::getCount));
+        list.sort(Comparator.comparingInt(AuthorCount::getCount));
         return list;
     }
 
@@ -63,7 +64,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
                 }
 
                 String realName = temp.getRealName();
-                Integer count = 0;
+                Integer count;
                 if (map.containsKey(realName)) {
                     count = map.get(realName) + 1;
                 } else {
@@ -81,6 +82,51 @@ public class AnalyzeServiceImpl implements AnalyzeService {
             wordCount.setCount(entry.getValue());
             wordCount.setWord(entry.getKey());
             ret.add(wordCount);
+        }
+        return ret;
+    }
+
+    @Override
+    public List<SingleWord> analyzeSingleWord() {
+        List<PoetryInfo> list = analyzeDao.queryAllPoetry();
+        List<Term> terms = new ArrayList<>();
+
+        Map<String, Integer> map = new HashMap<>();
+
+        for (PoetryInfo poetryInfo : list) {
+            String title = poetryInfo.getTitle();
+            //String content = poetryInfo.getContent();
+
+            terms.addAll(NlpAnalysis.parse(title).getTerms());
+            //terms.addAll(NlpAnalysis.parse(content).getTerms());
+
+            Iterator iterator = terms.iterator();
+            while (iterator.hasNext()) {
+                Term temp = (Term) iterator.next();
+                if (temp.getNatureStr() == null
+                        || temp.getRealName().length() < 2
+                        || !temp.getNatureStr().equals("nr")) {
+                    iterator.remove();
+                    continue;
+                }
+
+                String realName = temp.getRealName();
+                Integer count;
+                if (map.containsKey(realName)) {
+                    count = map.get(realName) + 1;
+                } else {
+                    count = 1;
+                }
+                map.put(realName, count);
+            }
+        }
+
+        List<SingleWord> ret = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            SingleWord singleWord = new SingleWord();
+            singleWord.setCount(entry.getValue());
+            singleWord.setWord(entry.getKey());
+            ret.add(singleWord);
         }
         return ret;
     }
